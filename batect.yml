@@ -1,0 +1,38 @@
+containers:
+  build-fastify-env:
+    image: node:14.3.0
+    volumes:
+      - local: .
+        container: /code
+        options: cached
+      - type: cache
+        name: node_modules
+        container: /code/node_modules
+    working_directory: /code
+  
+  db:
+    image: postgres:alpine
+    environment:
+      POSTGRES_PASSWORD: pas_world
+      POSTGRES_USER: app
+      POSTGRES_DB: db
+
+tasks:
+  install-dep:
+    description: Install dependencies needed to build fastify application
+    run:
+      container: build-fastify-env
+      command: npm ci
+
+  start-server:
+    description: Run fastify application
+    run:
+      environment:
+        PORT: 5000
+        POSTGRES_URI: postgres://app:pas_world@db/db
+      container: build-fastify-env
+      command: npm start
+      ports:
+        - 5000:5000
+    dependencies:
+      - db
