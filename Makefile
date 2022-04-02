@@ -1,4 +1,4 @@
-.PHONY: start
+.PHONY: install start start-test-db start-dev-db test-watch
 
 #-------------------------------------------------------------------------------
 install: 
@@ -9,9 +9,13 @@ start:
 	./batect start-server
 
 #-------------------------------------------------------------------------------
+start-dev-db: 
+	./batect start-dev-db 
+
+#-------------------------------------------------------------------------------
 start-test-db: 
 	./batect start-test-db
 
 #-------------------------------------------------------------------------------
 test-watch: 
-	./batect start-test-db
+	./batect test-watch

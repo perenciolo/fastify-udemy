@@ -51,6 +51,11 @@ tasks:
     dependencies:
       - db
 
+  start-dev-db:
+    description: start development database
+    run:
+      container: db
+
   start-test-db:
     description: start test database
     run:
