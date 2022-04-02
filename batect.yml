@@ -12,6 +12,20 @@ containers:
   
   db:
     image: postgres:alpine
+    ports:
+      - 5432:5432
+    volumes:
+      - local: ./postgres-data
+        container: /var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: pas_world
+      POSTGRES_USER: app
+      POSTGRES_DB: db
+  
+  db-test:
+    image: postgres:alpine
+    ports:
+      - 5432:5432
     environment:
       POSTGRES_PASSWORD: pas_world
       POSTGRES_USER: app
@@ -36,3 +50,19 @@ tasks:
         - 5000:5000
     dependencies:
       - db
+
+  start-test-db:
+    description: start test database
+    run:
+      container: db-test
+
+  test-watch:
+    description: test running in watch mode
+    run:
+      environment:
+        PORT: 5000
+        POSTGRES_URI: postgres://app:pas_world@db-test/db
+      container: build-fastify-env
+      command: npm run test:watch
+    dependencies:
+      - db-test

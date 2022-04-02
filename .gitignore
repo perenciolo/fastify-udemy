@@ -4,3 +4,4 @@ coverage
 dist
 .batect
 .env
+postgres-data
